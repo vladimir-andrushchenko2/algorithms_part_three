@@ -10,8 +10,8 @@ int main() {
 
     std::vector<int> prices(n_days);
 
-    for (int& price : prices) {
-        std::cin >> price;
+    for (int i = 0; i < n_days; ++i) {
+        std::cin >> prices[i];
     }
 
     std::vector<int> positions_of_price_decreases;
@@ -21,6 +21,8 @@ int main() {
             positions_of_price_decreases.push_back(i - 1);
         }
     }
+    
+    positions_of_price_decreases.push_back(static_cast<int>(prices.size()) - 1);
 
     int prev_position = 0;
 
@@ -30,8 +32,13 @@ int main() {
 
     for (int index_of_price_before_decrease : positions_of_price_decreases) {
         std::sort(prices_begin + prev_position, prices_begin + index_of_price_before_decrease);
-
+        
+        output += prices[index_of_price_before_decrease] - prices[prev_position];
+        
+        prev_position = index_of_price_before_decrease + 1;
     }
+    
+    std::cout << output;
 
     return 0;
 }
