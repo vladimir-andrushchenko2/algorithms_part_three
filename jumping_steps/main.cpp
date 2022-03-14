@@ -1,23 +1,25 @@
 #include <iostream>
+#include <vector>
+#include <cstdint>
 
-int totalWays(int n, int m) {
-    // base case: invalid input
-    if (n <= 0) {
-        return 0;
-    }
-
-    // base case: 1 way (with no steps)
-    if (n == 1) {
+int64_t TotalWays(int n, int k) {
+    if (k == 1 || n < 3) {
         return 1;
     }
 
-    int count = 0;
+    std::vector<int64_t> memo(n + 1);
 
-    for (int i = 1; i <= m; i++) {
-        count += totalWays(n - i, m);
+    memo[1] = 1;
+    memo[2] = 1;
+    memo[3] = 2;
+
+    for (int i = 4; i < memo.size(); ++i) {
+        for (int j = 1; j <= k && (i - j) >= 0; ++j) {
+            memo[i] += memo[i - j];
+        }
     }
 
-    return count;
+    return memo[n];
 }
 
 int main(int argc, const char * argv[]) {
@@ -25,6 +27,6 @@ int main(int argc, const char * argv[]) {
 
     std::cin >> n >> k;
 
-    std::cout << totalWays(n, k) << '\n';
+    std::cout << TotalWays(n, k) << '\n';
     return 0;
 }
