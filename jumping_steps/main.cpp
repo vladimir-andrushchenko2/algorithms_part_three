@@ -16,6 +16,7 @@ int64_t TotalWays(int n, int k) {
     for (int i = 4; i < memo.size(); ++i) {
         for (int j = 1; j <= k && (i - j) >= 0; ++j) {
             memo[i] += memo[i - j];
+            memo[i] %= 1'000'000'007;
         }
     }
 
