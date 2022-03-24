@@ -6,44 +6,41 @@ bool EvenLetter(char letter) {
     return (letter - 'a' + 1) % 2 == 0;
 }
 
-struct EvenString {
-    EvenString(const std::string& data) : data(data) {
-        while (index < data.size() && !EvenLetter(data[index])) {
-            ++index;
+// Even word is a word that consists of letters that are on even spaces in the alphabet
+std::string ReadEvenWord(std::istream& input) {
+    std::string output;
+
+    char another_char;
+
+    another_char = input.get();
+
+    while(!std::iswspace(another_char)) {
+        if (EvenLetter(another_char)) {
+            output.push_back(another_char);
         }
 
-        if (!EvenLetter(data[index])) {
-            ++index;
-        }
+        another_char = input.get();
     }
 
-    char GetNextChar() {
-        while (!EvenLetter(data[index]) && index < data.size()) {
-            ++index;
-        }
-
-        if (index == data.size()) {
-            assert(false);
-        }
-
-        return data[index];
-    }
-
-    bool IsEmpty() const {
-        return index == data.size();
-    }
-
-    int index{};
-
-    const std::string& data;
-};
+    return output;
+}
 
 int main() {
     std::string left, right;
-    
-    std::cin >> left >> right;
 
+    left = ReadEvenWord(std::cin);
 
-    
+    right = ReadEvenWord(std::cin);
+
+    if (left < right) {
+        std::cout << -1;
+    } else if (left > right) {
+        std::cout << 1;
+    } else {
+        std::cout << 0;
+    }
+
+    std::cout << '\n';
+
     return 0;
 }
