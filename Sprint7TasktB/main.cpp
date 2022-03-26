@@ -22,11 +22,17 @@ bool IsSubsetSum(const std::vector<int> set, int target_sum) {
     // start loop when subset size is 2
     for (int subset_size = 1; subset_size <= set.size(); ++subset_size) {
         for (int current_sum = 1; current_sum <= target_sum; ++current_sum) {
+            bool is_subset_sum_without_current_element = dp[subset_size - 1][current_sum];
+            
             if (set[subset_size - 1] > current_sum) {
-                dp[subset_size][current_sum] = dp[subset_size - 1][current_sum];
+                dp[subset_size][current_sum] = is_subset_sum_without_current_element;
+                
             } else {
                 int remainder = current_sum - set[subset_size - 1];
-                dp[subset_size][current_sum] = dp[subset_size - 1][remainder] || dp[subset_size - 1][current_sum];
+                
+                bool is_subset_sum_with_currrent_element = dp[subset_size - 1][remainder];
+                
+                dp[subset_size][current_sum] = is_subset_sum_with_currrent_element || is_subset_sum_without_current_element;
             }
         }
     }
