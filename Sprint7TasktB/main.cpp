@@ -6,8 +6,14 @@
 
 /*
  Принцип работы:
- При поиске наличия элементов составляющих искомую сумму я сначала ищу если возможно составить суммы от нуля до искомой используя
+ если сумма чисел не четная тогда ее нельзя разложить на 2 равные части
+ 
+ Если в подмножестве содержаться элементы из которых можно сложить половину суммы всех элементов значит элементы не включенные в это множество будут образовывать другую половину
+ 
+ При поиске наличия элементов составляющих половину суммы я сначала ищу если возможно составить суммы от нуля до половины используя
  от нуля до всех элементов множества
+ 
+ 
  */
 
 using namespace std::string_literals;
@@ -19,13 +25,13 @@ bool IsEven(int number) {
 bool IsSubsetSum(const std::vector<int>& elements, int target_sum) {
     std::vector<std::vector<bool>> subset_size_to_sums(elements.size() + 1, std::vector<bool>(target_sum + 1));
     
+    // it is possible to reach target sum of zero by taking zero elements
     for (int subset_size = 0; subset_size < subset_size_to_sums.size(); ++subset_size) {
         static constexpr int target_sum_of_zero = 0;
         
         subset_size_to_sums[subset_size][target_sum_of_zero] = true;
     }
     
-    // start loop when subset size is 2
     for (int n_elements = 1; n_elements <= elements.size(); ++n_elements) {
         for (int current_sum = 1; current_sum <= target_sum; ++current_sum) {
             bool is_subset_sum_without_current_element = subset_size_to_sums[n_elements - 1][current_sum];
