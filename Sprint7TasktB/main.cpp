@@ -4,40 +4,48 @@
 #include <numeric>
 #include <string>
 
+/*
+ Принцип работы:
+ При поиске наличия элементов составляющих искомую сумму я сначала ищу если возможно составить суммы от нуля до искомой используя
+ от нуля до всех элементов множества
+ */
+
 using namespace std::string_literals;
 
 bool IsEven(int number) {
     return number % 2 == 0;
 }
 
-bool IsSubsetSum(const std::vector<int> set, int target_sum) {
-    std::vector<std::vector<bool>> dp(set.size() + 1, std::vector<bool>(target_sum + 1));
+bool IsSubsetSum(const std::vector<int>& elements, int target_sum) {
+    std::vector<std::vector<bool>> subset_size_to_sums(elements.size() + 1, std::vector<bool>(target_sum + 1));
     
-    for (int subset_size = 0; subset_size < dp.size(); ++subset_size) {
+    for (int subset_size = 0; subset_size < subset_size_to_sums.size(); ++subset_size) {
         static constexpr int target_sum_of_zero = 0;
         
-        dp[subset_size][target_sum_of_zero] = true;
+        subset_size_to_sums[subset_size][target_sum_of_zero] = true;
     }
     
     // start loop when subset size is 2
-    for (int subset_size = 1; subset_size <= set.size(); ++subset_size) {
+    for (int n_elements = 1; n_elements <= elements.size(); ++n_elements) {
         for (int current_sum = 1; current_sum <= target_sum; ++current_sum) {
-            bool is_subset_sum_without_current_element = dp[subset_size - 1][current_sum];
+            bool is_subset_sum_without_current_element = subset_size_to_sums[n_elements - 1][current_sum];
             
-            if (set[subset_size - 1] > current_sum) {
-                dp[subset_size][current_sum] = is_subset_sum_without_current_element;
+            int current_element = elements[n_elements - 1];
+            
+            if (current_element > current_sum) {
+                subset_size_to_sums[n_elements][current_sum] = is_subset_sum_without_current_element;
                 
             } else {
-                int remainder = current_sum - set[subset_size - 1];
+                int remainder = current_sum - current_element;
                 
-                bool is_subset_sum_with_currrent_element = dp[subset_size - 1][remainder];
+                bool is_subset_sum_with_currrent_element = subset_size_to_sums[n_elements - 1][remainder];
                 
-                dp[subset_size][current_sum] = is_subset_sum_with_currrent_element || is_subset_sum_without_current_element;
+                subset_size_to_sums[n_elements][current_sum] = is_subset_sum_with_currrent_element || is_subset_sum_without_current_element;
             }
         }
     }
     
-    return dp.back().back();
+    return subset_size_to_sums.back().back();
 }
 
 int main(int argc, const char * argv[]) {
