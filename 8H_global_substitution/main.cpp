@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <string_view>
+#include <unordered_set>
 
-using Indexes = std::vector<int>;
+using Indexes = std::unordered_set<int>;
 
 Indexes Find(const std::string& pattern, const std::string& text) {
     Indexes output;
@@ -14,7 +16,7 @@ Indexes Find(const std::string& pattern, const std::string& text) {
     
     int previous_prefix_function = 0;
     
-    for (int i = 0; i < data_size; ++i) {
+    for (int i = 1; i < data_size; ++i) {
         int k = previous_prefix_function;
         
         while (k > 0 && data[k] != data[i]) {
@@ -32,15 +34,43 @@ Indexes Find(const std::string& pattern, const std::string& text) {
         previous_prefix_function = k;
         
         if (k == pattern.size()) {
-            output.push_back(i - 1 - 2 * pattern.size());
+            output.insert(i - 2 * static_cast<int>(pattern.size()));
         }
     }
     
     return output;
 }
 
+void PrintReplace(std::string_view text, std::string_view replacement, Indexes indexes_to_replace, std::size_t letters_to_skip_at_replacement) {
+    for (int i = 0; i < text.size();) {
+        if (indexes_to_replace.count(i) > 0) {
+            std::cout << replacement;
+            
+            i += letters_to_skip_at_replacement;
+            
+        } else {
+            std::cout << text[i];
+            
+            ++i;
+        }
+    }
+}
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    std::string text;
+    
+    std::getline(std::cin, text);
+    
+    std::string pattern;
+    
+    std::getline(std::cin, pattern);
+    
+    std::string replacement;
+    
+    std::getline(std::cin, replacement);
+    
+    auto indexes = Find(pattern, text);
+    
+    PrintReplace(text, replacement, indexes, pattern.size());
     return 0;
 }
