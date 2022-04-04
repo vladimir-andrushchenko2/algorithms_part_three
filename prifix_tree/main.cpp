@@ -32,13 +32,13 @@ struct PrefixTree {
         Node* current_node = &root;
         
         for (char symbol : pattern) {
-            current_node->words_that_containt_current_prefix.insert(stored_word);
-            
             if (current_node->edges.count(symbol) == 0) {
-                current_node->edges.insert({symbol, {}});
+                current_node->edges[symbol] = Node{};
             }
             
             current_node = &current_node->edges.at(symbol);
+            
+            current_node->words_that_containt_current_prefix.insert(stored_word);
         }
         
         current_node->is_terminal = true;
@@ -49,7 +49,7 @@ struct PrefixTree {
         
         for (char symbol : word) {
             if (current_node->edges.count(symbol) == 0) {
-                return {};
+                return nullptr;
             }
             
             current_node = &current_node->edges.at(symbol);
@@ -60,18 +60,18 @@ struct PrefixTree {
 };
 
 CapitalAndAllLetters ReadWord(std::istream& input) {
+    input >> std::ws;
+    
     std::string capital_letters;
     
     std::string word;
     
-    char current_letter = '\0';
-    
-    while (!std::iswspace(current_letter)) {
-        current_letter = input.get();
+    while (!std::iswspace(input.peek())) {
+        char current_letter = input.get();
         
         word.push_back(current_letter);
         
-        if (isupper(current_letter)) {
+        if (std::isupper(current_letter)) {
             capital_letters.push_back(current_letter);
         }
     }
@@ -91,12 +91,12 @@ int main(int argc, const char * argv[]) {
     for (int i = 0; i < n_words_in_dictionary; ++i) {
         auto [capital_letters, word] = ReadWord(std::cin);
         
-        trie.AddString(capital_letters, std::move(capital_letters));
+        trie.AddString(capital_letters, std::move(word));
     }
     
     int n_search_requests{};
     
-    std::cin >> n_search_requests;
+    std::cin >> n_search_requests >> std::ws;
     
     std::string search_request;
     
@@ -107,9 +107,6 @@ int main(int argc, const char * argv[]) {
             for (std::string_view word : node->words_that_containt_current_prefix) {
                 std::cout << word << '\n';
             }
-            
-        } else {
-            std::cout << '\n';
         }
     }
     
