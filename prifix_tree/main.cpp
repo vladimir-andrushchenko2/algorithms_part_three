@@ -5,25 +5,30 @@
 #include <optional>
 #include <utility>
 #include <unordered_set>
-#include <forward_list>
+#include <set>
+#include <memory>
 
 using namespace std::string_view_literals;
 
 using CapitalAndAllLetters = std::pair<std::string, std::string>;
 
 struct Node {
-    std::unordered_map<char, Node> edges;
+    std::unordered_map<char, std::unique_ptr<Node>> edges;
     bool is_terminal = false;
     std::unordered_set<std::string_view> words_that_containt_current_prefix;
 };
 
 struct PrefixTree {
     Node root;
-    std::forward_list<std::string> word_storage;
+    std::set<std::string> word_storage;
     
     std::string_view SaveWord(std::string word) {
-        word_storage.push_front(std::move(word));
-        return word_storage.front();
+        auto [iterator, is_inserted] = word_storage.insert(std::move(word));
+        return *iterator;
+    }
+    
+    const auto& GetStoredWords() const {
+        return word_storage;
     }
     
     void AddString(std::string_view pattern, std::string word) {
@@ -33,10 +38,10 @@ struct PrefixTree {
         
         for (char symbol : pattern) {
             if (current_node->edges.count(symbol) == 0) {
-                current_node->edges[symbol] = Node{};
+                current_node->edges[symbol] = std::make_unique<Node>();
             }
             
-            current_node = &current_node->edges.at(symbol);
+            current_node = current_node->edges.at(symbol).get();
             
             current_node->words_that_containt_current_prefix.insert(stored_word);
         }
@@ -52,7 +57,7 @@ struct PrefixTree {
                 return nullptr;
             }
             
-            current_node = &current_node->edges.at(symbol);
+            current_node = current_node->edges.at(symbol).get();
         }
         
         return current_node;
@@ -96,17 +101,29 @@ int main(int argc, const char * argv[]) {
     
     int n_search_requests{};
     
-    std::cin >> n_search_requests >> std::ws;
+    std::cin >> n_search_requests;
+    
+    std::cin.get();
     
     std::string search_request;
     
     for (int i = 0; i < n_search_requests; ++i) {
         std::getline(std::cin, search_request);
         
+        if (search_request.empty()) {
+            for (auto word : trie.GetStoredWords()) {
+                std::cout << word << '\n';
+            }
+            
+            continue;
+        }
+        
         if (const Node* node = trie.FindNode(search_request)) {
             for (std::string_view word : node->words_that_containt_current_prefix) {
                 std::cout << word << '\n';
             }
+        } else {
+            std::cout << '\n';
         }
     }
     
