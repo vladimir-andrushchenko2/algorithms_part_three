@@ -15,7 +15,7 @@ using CapitalAndAllLetters = std::pair<std::string, std::string>;
 struct Node {
     std::unordered_map<char, std::unique_ptr<Node>> edges;
     bool is_terminal = false;
-    std::unordered_set<std::string_view> words_that_containt_current_prefix;
+    std::set<std::string_view> words_that_containt_current_prefix;
 };
 
 struct PrefixTree {
