@@ -2,7 +2,6 @@
 #include <vector>
 #include <cctype>
 #include <string_view>
-#include <stack>
 
 using namespace std::string_literals;
 
@@ -74,18 +73,41 @@ std::string Unpack(std::string_view text) {
     return prefix;
 }
 
+int LengthOfCommonPrefix(const std::vector<std::string>& strings) {
+    int index_of_symbol = 0;
+
+    for (;index_of_symbol < strings.front().size(); ++index_of_symbol) {
+        char possibly_common_symbol = strings.front()[index_of_symbol];
+
+        for (int index_of_another_string = 1; index_of_another_string < strings.size(); ++index_of_another_string) {
+            if (strings[index_of_another_string][index_of_symbol] != possibly_common_symbol) {
+                return index_of_symbol;
+            }
+        }
+    }
+
+    return index_of_symbol;
+}
+
 void Test() {
     assert(Multiply("ab"s, 3) == "ababab"s);
     assert(Multiply("potato "s, 4) == "potato potato potato potato "s);
 
-    std::string unpacked = Unpack("2[a]2[ab]"s);
-    assert(unpacked == "aaabab"s);
+    {
+        std::string unpacked = Unpack("2[a]2[ab]"s);
+        assert(unpacked == "aaabab"s);
 
-    unpacked = Unpack("3[a]2[r2[t]]"s);
-    assert(unpacked == "aaarttrtt"s);
+        unpacked = Unpack("3[a]2[r2[t]]"s);
+        assert(unpacked == "aaarttrtt"s);
 
-    unpacked = Unpack("a2[aa3[b]]"s);
-    assert(unpacked == "aaabbbaabbb"s);
+        unpacked = Unpack("a2[aa3[b]]"s);
+        assert(unpacked == "aaabbbaabbb"s);
+    }
+
+    {
+        int len = LengthOfCommonPrefix({"aab"s, "aac"s});
+        assert(len == 2);
+    }
 }
 
 int main(int argc, const char * argv[]) {
