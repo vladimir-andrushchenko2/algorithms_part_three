@@ -6,11 +6,11 @@
 
 using namespace std::string_literals;
 
-int ReadNumber(std::string_view& text) {
+int ExtractNumber(std::string_view& text) {
     int output{};
     
     while (std::isdigit(text.front())) {
-        output = output * 10 + text.front();
+        output = output * 10 + (text.front() - '0');
         text.remove_prefix(1);
     }
     
@@ -22,7 +22,7 @@ std::string_view GetCompressedPartInBrackets(std::string_view text) {
     
     int opened_bracket_counter = 1;
     
-    for (int i = 0; i < text.size(); ++i) {
+    for (int i = 1; i < text.size(); ++i) {
         if (text[i] == '[') {
             ++opened_bracket_counter;
         }
@@ -31,7 +31,8 @@ std::string_view GetCompressedPartInBrackets(std::string_view text) {
             --opened_bracket_counter;
             
             if (opened_bracket_counter == 0) {
-                return text.substr(1, i);
+                // - 1 to avoid closing bracket in output
+                return text.substr(1, i - 1);
             }
         }
     }
@@ -41,9 +42,10 @@ std::string_view GetCompressedPartInBrackets(std::string_view text) {
 }
 
 std::string Multiply(std::string text, std::size_t times) {
+    text.reserve(text.size() * times);
     std::string_view source = text;
     
-    for (int i = 0; i < times; ++i) {
+    for (int i = 1; i < times; ++i) {
         text.append(source);
     }
     
@@ -55,11 +57,12 @@ std::string Unpack(std::string_view text) {
     
     while (!text.empty()) {
         if (std::isdigit(text.front())) {
-            int n = ReadNumber(text);
+            int n = ExtractNumber(text);
             
             std::string_view compressed_part = GetCompressedPartInBrackets(text);
-            
-            text.remove_prefix(compressed_part.size());
+
+            // + 2 for '[' and ']'
+            text.remove_prefix(compressed_part.size() + 2);
             
             return prefix + Multiply(Unpack(compressed_part), n) + Unpack(text);
         }
@@ -71,9 +74,22 @@ std::string Unpack(std::string_view text) {
     return prefix;
 }
 
-int main(int argc, const char * argv[]) {
+void Test() {
+    assert(Multiply("ab"s, 3) == "ababab"s);
+    assert(Multiply("potato "s, 4) == "potato potato potato potato "s);
+
     std::string unpacked = Unpack("2[a]2[ab]"s);
-    
     assert(unpacked == "aaabab"s);
+
+    unpacked = Unpack("3[a]2[r2[t]]"s);
+    assert(unpacked == "aaarttrtt"s);
+
+    unpacked = Unpack("a2[aa3[b]]"s);
+    assert(unpacked == "aaabbbaabbb"s);
+}
+
+int main(int argc, const char * argv[]) {
+    Test();
+
     return 0;
 }
