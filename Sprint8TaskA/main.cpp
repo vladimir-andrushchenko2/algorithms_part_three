@@ -2,6 +2,7 @@
 #include <vector>
 #include <cctype>
 #include <string_view>
+#include <cassert>
 
 using namespace std::string_literals;
 
@@ -89,29 +90,21 @@ int LengthOfCommonPrefix(const std::vector<std::string>& strings) {
     return index_of_symbol;
 }
 
-void Test() {
-    assert(Multiply("ab"s, 3) == "ababab"s);
-    assert(Multiply("potato "s, 4) == "potato potato potato potato "s);
-
-    {
-        std::string unpacked = Unpack("2[a]2[ab]"s);
-        assert(unpacked == "aaabab"s);
-
-        unpacked = Unpack("3[a]2[r2[t]]"s);
-        assert(unpacked == "aaarttrtt"s);
-
-        unpacked = Unpack("a2[aa3[b]]"s);
-        assert(unpacked == "aaabbbaabbb"s);
-    }
-
-    {
-        int len = LengthOfCommonPrefix({"aab"s, "aac"s});
-        assert(len == 2);
-    }
-}
-
 int main(int argc, const char * argv[]) {
-    Test();
+    int n_packed_strings;
+
+    std::cin >> n_packed_strings >> std::ws;
+
+    std::vector<std::string> unpacked_strings;
+
+    std::string packed_string;
+    for (int i = 0; i < n_packed_strings; ++i) {
+        std::getline(std::cin, packed_string);
+
+        unpacked_strings.push_back(Unpack(packed_string));
+    }
+
+    std::cout << std::string_view{unpacked_strings.front().data(), static_cast<size_t>(LengthOfCommonPrefix(unpacked_strings))} << '\n';
 
     return 0;
 }
