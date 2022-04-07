@@ -6,20 +6,6 @@
 
 using namespace std::string_literals;
 
-static constexpr int kBasisForHashing = 1283;
-
-static constexpr int kModuloForHashing = 9001;
-
-std::vector<int> GenerateSizeOfPrefixToHash(std::string_view string_to_hash, int basis_for_hashing, int modulo) {
-    std::vector<int> hashes_of_prefixes(string_to_hash.size() + 1);
-    
-    for (int i = 1; i < string_to_hash.size() + 1; ++i) {
-        hashes_of_prefixes[i] = (((hashes_of_prefixes[i - 1] * basis_for_hashing) % modulo) + string_to_hash[i - 1] % modulo) % modulo;
-    }
-    
-    return hashes_of_prefixes;
-}
-
 int ReadNumber(std::string_view& text) {
     int output{};
     
