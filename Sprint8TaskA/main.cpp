@@ -98,13 +98,16 @@ int main(int argc, const char * argv[]) {
     std::vector<std::string> unpacked_strings;
 
     std::string packed_string;
+    
     for (int i = 0; i < n_packed_strings; ++i) {
         std::getline(std::cin, packed_string);
 
         unpacked_strings.push_back(Unpack(packed_string));
     }
 
-    std::cout << std::string_view{unpacked_strings.front().data(), static_cast<size_t>(LengthOfCommonPrefix(unpacked_strings))} << '\n';
+    std::string_view longest_common_prefix = std::string_view{unpacked_strings.front().data(), static_cast<size_t>(LengthOfCommonPrefix(unpacked_strings))};
+
+    std::cout << longest_common_prefix << '\n';
 
     return 0;
 }
