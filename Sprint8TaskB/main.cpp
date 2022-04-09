@@ -54,17 +54,21 @@ struct PrefixTree {
 };
 
 bool IsTextComposedOfWords(std::string_view text, const PrefixTree& trie) {
+    if (text.empty()) {
+        return true;
+    }
+    
     for (const Node* prefix : trie.FindPrefixesThatAreWords(text)) {
         std::string_view text_without_prefix = text;
         
         text_without_prefix.remove_prefix(prefix->word.size());
         
-        if (text_without_prefix.empty()) {
+        if (IsTextComposedOfWords(text_without_prefix, trie)) {
             return true;
         }
     }
         
-        
+    return false;
 }
 
 int main(int argc, const char * argv[]) {
