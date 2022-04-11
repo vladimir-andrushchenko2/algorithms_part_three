@@ -5,77 +5,59 @@
 #include <utility>
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 using namespace std::string_view_literals;
 
-class PrefixTree {
-public:
+struct Node {
+    std::unordered_map<char, std::unique_ptr<Node>> edges;
+    bool is_terminal = false;
+};
+
+struct PrefixTree {
+    std::unique_ptr<Node> root = std::make_unique<Node>();
+    
     void AddWord(std::string_view word) {
-        Index current_node_index = kIndexOfRoot;
-
-        for (char symbol : word) {
-            if (nodes_.at(current_node_index).edges.count(symbol) == 0) {
-                nodes_.at(current_node_index).edges[symbol] = nodes_.size();
-                nodes_.emplace_back();
-            }
-            
-            current_node_index = nodes_.at(current_node_index).edges[symbol];
-        }
-        
-        nodes_.at(current_node_index).is_terminal = true;
-        nodes_.at(current_node_index).word = word;
-    }
-    
-    std::vector<std::string_view> FindPrefixesThatAreWords(std::string_view word) const {
-        Index current_node_index = kIndexOfRoot;
-        
-        std::vector<std::string_view> output;
+        Node* current_node = root.get();
         
         for (char symbol : word) {
-            if (nodes_.at(current_node_index).edges.count(symbol) == 0) {
-                break;
+            if (current_node->edges.count(symbol) == 0) {
+                current_node->edges[symbol] = std::make_unique<Node>();
             }
             
-            current_node_index = nodes_.at(current_node_index).edges.at(symbol);
-            
-            if (nodes_.at(current_node_index).is_terminal) {
-                output.push_back(nodes_.at(current_node_index).word);
-            }
+            current_node = current_node->edges.at(symbol).get();
         }
         
-        return output;
+        current_node->is_terminal = true;
     }
-
-private:
-    using Index = std::size_t;
-    
-    static constexpr std::size_t kIndexOfRoot = 0;
-
-    struct Node {
-        std::unordered_map<char, Index> edges;
-        bool is_terminal = false;
-        std::string_view word;
-    };
-
-private:
-    std::vector<Node> nodes_ = std::vector<Node>(1);
 };
 
 bool IsTextComposedOfWords(std::string_view text, const PrefixTree& trie) {
-    if (text.empty()) {
-        return true;
+    std::unordered_set<const Node*> current_nodes;
+    current_nodes.insert(trie.root.get());
+    
+    for (char symbol : text) {
+        std::unordered_set<const Node*> next_nodes;
+        
+        for (auto node : current_nodes) {
+            if (node->edges.count(symbol) > 0) {
+                next_nodes.insert(node->edges.at(symbol).get());
+                
+                if (node->edges.at(symbol)->is_terminal) {
+                    next_nodes.insert(trie.root.get());
+                }
+            }
+        }
+        
+        std::swap(next_nodes, current_nodes);
     }
     
-    for (auto prefix : trie.FindPrefixesThatAreWords(text)) {
-        std::string_view text_without_prefix = text;
-        
-        text_without_prefix.remove_prefix(prefix.size());
-        
-        if (IsTextComposedOfWords(text_without_prefix, trie)) {
+    for (auto& node : current_nodes) {
+        if (node->is_terminal) {
             return true;
         }
     }
-
+    
     return false;
 }
 
