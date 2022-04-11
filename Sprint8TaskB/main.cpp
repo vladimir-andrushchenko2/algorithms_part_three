@@ -8,49 +8,32 @@
 
 using namespace std::string_view_literals;
 
-struct Node {
-    std::unordered_map<char, std::unique_ptr<Node>> edges;
-    bool is_terminal = false;
-    std::string_view word;
-};
 
-struct PrefixTree {
-    Node root;
-    
+class PrefixTree {
+
+public:
     void AddWord(std::string_view word) {
-        Node* current_node = &root;
+        auto& root = nodes_.front();
+
         
-        for (char symbol : word) {
-            if (current_node->edges.count(symbol) == 0) {
-                current_node->edges[symbol] = std::make_unique<Node>();
-            }
-            
-            current_node = current_node->edges.at(symbol).get();
-        }
-        
-        current_node->is_terminal = true;
-        current_node->word = word;
     }
     
-    std::vector<const Node*> FindPrefixesThatAreWords(std::string_view word) const {
-        const Node* current_node = &root;
-        
-        std::vector<const Node*> output;
-        
-        for (char symbol : word) {
-            if (current_node->edges.count(symbol) == 0) {
-                break;
-            }
-            
-            current_node = current_node->edges.at(symbol).get();
-            
-            if (current_node->is_terminal) {
-                output.push_back(current_node);
-            }
-        }
-        
-        return output;
+    std::vector<std::string_view> FindPrefixesThatAreWords(std::string_view word) const {
+        assert(false);
+        return {};
     }
+
+private:
+    using IndexOfNext = int;
+
+    struct Node {
+        std::unordered_map<char, IndexOfNext> edges;
+        bool is_terminal = false;
+        std::string_view word;
+    };
+
+private:
+    std::vector<Node> nodes_ = std::vector<Node>(1);
 };
 
 bool IsTextComposedOfWords(std::string_view text, const PrefixTree& trie) {
@@ -58,16 +41,16 @@ bool IsTextComposedOfWords(std::string_view text, const PrefixTree& trie) {
         return true;
     }
     
-    for (const Node* prefix : trie.FindPrefixesThatAreWords(text)) {
+    for (auto prefix : trie.FindPrefixesThatAreWords(text)) {
         std::string_view text_without_prefix = text;
         
-        text_without_prefix.remove_prefix(prefix->word.size());
+        text_without_prefix.remove_prefix(prefix.size());
         
         if (IsTextComposedOfWords(text_without_prefix, trie)) {
             return true;
         }
     }
-        
+
     return false;
 }
 
