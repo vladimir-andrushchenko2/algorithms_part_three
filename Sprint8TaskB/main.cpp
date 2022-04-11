@@ -8,26 +8,51 @@
 
 using namespace std::string_view_literals;
 
-
 class PrefixTree {
-
 public:
     void AddWord(std::string_view word) {
-        auto& root = nodes_.front();
+        Index current_node_index = kIndexOfRoot;
 
+        for (char symbol : word) {
+            if (nodes_.at(current_node_index).edges.count(symbol) == 0) {
+                nodes_.at(current_node_index).edges[symbol] = nodes_.size();
+                nodes_.emplace_back();
+            }
+            
+            current_node_index = nodes_.at(current_node_index).edges[symbol];
+        }
         
+        nodes_.at(current_node_index).is_terminal = true;
+        nodes_.at(current_node_index).word = word;
     }
     
     std::vector<std::string_view> FindPrefixesThatAreWords(std::string_view word) const {
-        assert(false);
-        return {};
+        Index current_node_index = kIndexOfRoot;
+        
+        std::vector<std::string_view> output;
+        
+        for (char symbol : word) {
+            if (nodes_.at(current_node_index).edges.count(symbol) == 0) {
+                break;
+            }
+            
+            current_node_index = nodes_.at(current_node_index).edges.at(symbol);
+            
+            if (nodes_.at(current_node_index).is_terminal) {
+                output.push_back(nodes_.at(current_node_index).word);
+            }
+        }
+        
+        return output;
     }
 
 private:
-    using IndexOfNext = int;
+    using Index = std::size_t;
+    
+    static constexpr std::size_t kIndexOfRoot = 0;
 
     struct Node {
-        std::unordered_map<char, IndexOfNext> edges;
+        std::unordered_map<char, Index> edges;
         bool is_terminal = false;
         std::string_view word;
     };
