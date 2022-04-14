@@ -61,7 +61,33 @@ bool IsTextComposedOfWords(std::string_view text, const PrefixTree& trie) {
     return false;
 }
 
-int main(int argc, const char * argv[]) {
+bool IsTextComposedOfWordsDynamic(std::string_view text, const PrefixTree& trie) {
+    std::vector<bool> is_prefix_size_words(text.size() + 1, false);
+    
+    is_prefix_size_words[0] = true;
+    
+    for (int i = 1; i <= text.size(); ++i) {
+        if (is_prefix_size_words[i - 1]) {
+            const Node* node = trie.root.get();
+        
+            int counter{};
+            
+            while (node->edges.count(text[i + counter - 1]) > 0) {
+                node = node->edges.at(text[i + counter - 1]).get();
+                
+                if (node->is_terminal) {
+                    is_prefix_size_words[i + counter] = true;
+                }
+                
+                ++counter;
+            }
+        }
+    }
+    
+    return is_prefix_size_words[text.size()];
+}
+
+int main() {
     std::string text;
     
     std::getline(std::cin, text);
@@ -83,7 +109,7 @@ int main(int argc, const char * argv[]) {
         trie.AddWord(word);
     }
     
-    if (IsTextComposedOfWords(text, trie)) {
+    if (IsTextComposedOfWordsDynamic(text, trie)) {
         std::cout << "YES\n";
     } else {
         std::cout << "NO\n";
