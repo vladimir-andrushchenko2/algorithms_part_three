@@ -26,6 +26,7 @@
 		75536DCD27E88628005487DC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75536DCC27E88628005487DC /* main.cpp */; };
 		758A22F127EEF6B2005C355A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758A22F027EEF6B2005C355A /* main.cpp */; };
 		75F0E53C2800247E006880B9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F0E53B2800247E006880B9 /* main.cpp */; };
+		75F0E5472806EC0F006880B9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F0E5462806EC0F006880B9 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -200,6 +201,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		75F0E5422806EC0F006880B9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -241,6 +251,8 @@
 		758A22F027EEF6B2005C355A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75F0E5392800247E006880B9 /* Sprint8TaskB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint8TaskB; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F0E53B2800247E006880B9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		75F0E5442806EC0F006880B9 /* aho-corasick */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "aho-corasick"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75F0E5462806EC0F006880B9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -377,6 +389,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		75F0E5412806EC0F006880B9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -498,6 +517,7 @@
 				20912BEB27F9ED8C00D2065A /* prifix_tree */,
 				20912BF627FDEBD200D2065A /* Sprint8TaskA */,
 				75F0E53A2800247E006880B9 /* Sprint8TaskB */,
+				75F0E5452806EC0F006880B9 /* aho-corasick */,
 				75536D9C27DDDDB0005487DC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -524,6 +544,7 @@
 				20912BEA27F9ED8C00D2065A /* prifix_tree */,
 				20912BF527FDEBD200D2065A /* Sprint8TaskA */,
 				75F0E5392800247E006880B9 /* Sprint8TaskB */,
+				75F0E5442806EC0F006880B9 /* aho-corasick */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -582,6 +603,14 @@
 				75F0E53B2800247E006880B9 /* main.cpp */,
 			);
 			path = Sprint8TaskB;
+			sourceTree = "<group>";
+		};
+		75F0E5452806EC0F006880B9 /* aho-corasick */ = {
+			isa = PBXGroup;
+			children = (
+				75F0E5462806EC0F006880B9 /* main.cpp */,
+			);
+			path = "aho-corasick";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -910,6 +939,23 @@
 			productReference = 75F0E5392800247E006880B9 /* Sprint8TaskB */;
 			productType = "com.apple.product-type.tool";
 		};
+		75F0E5432806EC0F006880B9 /* aho-corasick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75F0E5482806EC0F006880B9 /* Build configuration list for PBXNativeTarget "aho-corasick" */;
+			buildPhases = (
+				75F0E5402806EC0F006880B9 /* Sources */,
+				75F0E5412806EC0F006880B9 /* Frameworks */,
+				75F0E5422806EC0F006880B9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "aho-corasick";
+			productName = "aho-corasick";
+			productReference = 75F0E5442806EC0F006880B9 /* aho-corasick */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -976,6 +1022,9 @@
 					75F0E5382800247E006880B9 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
+					75F0E5432806EC0F006880B9 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
 				};
 			};
 			buildConfigurationList = 75536D9627DDDDB0005487DC /* Build configuration list for PBXProject "algorithms_part_three" */;
@@ -1010,6 +1059,7 @@
 				20912BE927F9ED8C00D2065A /* prifix_tree */,
 				20912BF427FDEBD200D2065A /* Sprint8TaskA */,
 				75F0E5382800247E006880B9 /* Sprint8TaskB */,
+				75F0E5432806EC0F006880B9 /* aho-corasick */,
 			);
 		};
 /* End PBXProject section */
@@ -1167,6 +1217,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		75F0E5402806EC0F006880B9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75F0E5472806EC0F006880B9 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -1306,7 +1364,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1315,7 +1373,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1625,6 +1683,22 @@
 			};
 			name = Release;
 		};
+		75F0E5492806EC0F006880B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		75F0E54A2806EC0F006880B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1804,6 +1878,15 @@
 			buildConfigurations = (
 				75F0E53D2800247E006880B9 /* Debug */,
 				75F0E53E2800247E006880B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75F0E5482806EC0F006880B9 /* Build configuration list for PBXNativeTarget "aho-corasick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75F0E5492806EC0F006880B9 /* Debug */,
+				75F0E54A2806EC0F006880B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
